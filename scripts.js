@@ -90,15 +90,27 @@ $(document).ready(function () {
             var keyPressed = event.which;
             if (keyPressed === currentLetter.charCodeAt()) {
                 $("#feedback").append('<span class="glyphicon glyphicon-ok"></span>');
-                console.log('right');
                 correct++;
             } else {
                 $("#feedback").append('<span class="glyphicon glyphicon-remove"></span>');
-                console.log('wrong');
                 incorrect++;
             }
         }
 
+        //change to next sentence in array at end of string
+        //if current letter = the length of the current sentence
+        if (letterIndex == (sentences[sentenceIndex]).length) {
+            //remove old sentence
+           $("#sentence").empty();
+           sentenceIndex++;
+           //append new sentence
+           $("#sentence").append(sentences[sentenceIndex]);
+           letterIndex = 0;
+           //makes yellow block move back to beginning of sentence
+           $('#yellow-block').css({left: 17}, 25);
+           //clears feedback div at end of array
+           $('#feedback').empty();
+       }
 
         //timeStamp
         if (sentenceIndex > sentences.length - 1) {
@@ -121,16 +133,5 @@ $(document).ready(function () {
         };
         //keypress end tag
     })
-
-
-
-
-
-
-
-
-
-
-
     //final close tag
 });
