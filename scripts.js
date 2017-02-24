@@ -62,6 +62,7 @@ $(document).ready(function () {
 
         //highlight keys
         keyPress.css('background-color', 'yellow');
+
         //unhighlight keys using keyup function
         $(document).keyup(function () {
             keyPress.css('background-color', '#f5f5f5');
@@ -101,27 +102,39 @@ $(document).ready(function () {
         //if current letter = the length of the current sentence
         if (letterIndex == (sentences[sentenceIndex]).length) {
             //remove old sentence
-           $("#sentence").empty();
-           sentenceIndex++;
-           //append new sentence
-           $("#sentence").append(sentences[sentenceIndex]);
-           letterIndex = 0;
-           //makes yellow block move back to beginning of sentence
-           $('#yellow-block').css({left: 17}, 25);
-           //clears feedback div at end of array
-           $('#feedback').empty();
-       }
+            $("#sentence").empty();
+            sentenceIndex++;
+            //append new sentence
+            $("#sentence").append(sentences[sentenceIndex]);
+            letterIndex = 0;
+            //to put first letter of sentence on page
+            var currentSentence = sentences[sentenceIndex];
+            //locates separate letters in the separate sentences
+            var currentLetter = currentSentence[letterIndex];
+            //sets nextLetter to the separate letters
+            var nextLetter = currentSentence[letterIndex];
+            //puts nextLetter on the page
+            currentLetterDiv.text(nextLetter);
+            //makes yellow block move back to beginning of sentence
+            $('#yellow-block').css({ left: 17 });
+            //clears feedback div at end of array
+            $('#feedback').empty();
+        }
 
         //timeStamp
+        //if you've reached the end of the last sentence in the array
         if (sentenceIndex > sentences.length - 1) {
+            //stop timing
             finish = event.timeStamp;
 
             //wpm
             var time = (finish - start);
+            //do some math
             time /= 60000;
             var speed = Math.round((54 / time) - (errors * 2));
             $('#target-letter').text('You typed ' + speed + ' words per minute');
 
+            //use boolean to confirm if they want to play again or not
             setTimeout(function () {
                 var r = confirm('Do you want to try again?');
                 if (r == true) {
