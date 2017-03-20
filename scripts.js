@@ -3,27 +3,24 @@ $(document).ready(function () {
     var sentences = ['ten ate neite ate nee enet ite ate inet ent eate', 'Too ato too nOt enot one totA not anot tOO aNot', 'oat itain oat tainnate eate tea anne inant nean', 'itant eate anot eat nato inate eatanot tain eat', 'nee ene ate ite tent tiet ent ine ene ete ene ate'];
     //array is separate sentences
     var sentenceIndex = 0;
-    //sentence is separate letters
-    var letterIndex = 0;
     //defines currentSentence as the first sentence of the array
-    var currentSentence = sentences[0];
+    var currentSentence = sentences[sentenceIndex];
+      //sentence is separate letters
+    var letterIndex = 0;
     //defines curretLetter as the first letter of the currentSentence
-    var currentLetter = currentSentence[0];
-    //variables for correct and incorrect
-    var correct = 0;
-    var incorrect = 0;
-
+    var currentLetter = currentSentence[letterIndex];
+    //variables for glyphicons
+    var errors = 0;
+    //variables for timestamp
     var start;
     var finish;
-    var errors = 0;
+
+    //append sentences to the webpage
+    $('#sentence').append(sentences[sentenceIndex]);
 
     //append first letter to middle of page
     var currentLetterDiv = $('#target-letter');
     currentLetterDiv.append(currentLetter);
-
-
-    //append sentences to the webpage
-    $('#sentence').append(sentences[sentenceIndex]);
 
     //hide upper case keyboard on page load
     $('#keyboard-upper-container').hide();
@@ -36,7 +33,6 @@ $(document).ready(function () {
             $('#keyboard-upper-container').show();
             $('#keyboard-lower-container').hide();
         }
-
     })
 
     //keyup event
@@ -47,12 +43,13 @@ $(document).ready(function () {
             $('#keyboard-lower-container').show();
             $('#keyboard-upper-container').hide();
         }
-
     })
 
     //keypress events
     $(document).keypress(function (event) {
-
+        var currentSentence = sentences[sentenceIndex];
+        var currentLetter = currentSentence[letterIndex];
+        //start timestamp
         if (start == undefined) {
             start = event.timeStamp;
         }
@@ -73,11 +70,6 @@ $(document).ready(function () {
 
 
         //change letter in middle of page to next letter
-        //locates each separate sentence in array
-        var currentSentence = sentences[sentenceIndex];
-        //locates separate letters in the separate sentences
-        var currentLetter = currentSentence[letterIndex];
-        //goes to next letter
         letterIndex++;
         //sets nextLetter to the separate letters
         var nextLetter = currentSentence[letterIndex];
@@ -86,33 +78,30 @@ $(document).ready(function () {
 
 
         //add glyphicons for right and wrong
-        //if separate letters are less than the current sentence on the page minus 1
+        //if separate letters are less than the current sentence on the page 
         if (letterIndex < currentSentence.length - 1) {
-            var keyPressed = event.which;
-            if (keyPressed === currentLetter.charCodeAt()) {
+            // var keyPressed = event.which;
+            if (event.which === currentLetter.charCodeAt()) {
                 $("#feedback").append('<span class="glyphicon glyphicon-ok"></span>');
-                correct++;
             } else {
                 $("#feedback").append('<span class="glyphicon glyphicon-remove"></span>');
-                incorrect++;
+                errors++;
             }
         }
 
-        //change to next sentence in array at end of string
+        //end of each string in array: change sentence, letter, move block back, and clear feedback
         //if current letter = the length of the current sentence
-        if (letterIndex == (sentences[sentenceIndex]).length) {
+        if (letterIndex == currentSentence.length) {
             //remove old sentence
             $("#sentence").empty();
             sentenceIndex++;
+            currentSentence = sentences[sentenceIndex];
             //append new sentence
             $("#sentence").append(sentences[sentenceIndex]);
             letterIndex = 0;
-            //to put first letter of sentence on page
-            var currentSentence = sentences[sentenceIndex];
-            //locates separate letters in the separate sentences
-            var currentLetter = currentSentence[letterIndex];
-            //sets nextLetter to the separate letters
-            var nextLetter = currentSentence[letterIndex];
+            if(sentenceIndex < sentences.length - 1) {
+                var nextLetter = currentSentence[letterIndex];
+            }
             //puts nextLetter on the page
             currentLetterDiv.text(nextLetter);
             //makes yellow block move back to beginning of sentence
@@ -120,6 +109,7 @@ $(document).ready(function () {
             //clears feedback div at end of array
             $('#feedback').empty();
         }
+
 
         //timeStamp
         //if you've reached the end of the last sentence in the array
@@ -148,3 +138,4 @@ $(document).ready(function () {
     })
     //final close tag
 });
+
